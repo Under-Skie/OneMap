@@ -2,6 +2,11 @@ import { app, BrowserWindow, protocol } from 'electron';
 const path = require('path');
 const url = require("url");
 const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
+
+const dbPath = getFileWithExtensionName(path.resolve(__dirname, '..','data'), 'sqlite')
+const db = new sqlite3.Database(dbPath);
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
@@ -21,6 +26,7 @@ const createWindow = () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
+  if (process.env['NODE_ENV'] == 'development')
   mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
@@ -30,10 +36,24 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  // mainWindow.webContents.on('dom-ready', () => {
+  //   db.all('select * from Meta',function (error, results, fields){
+  //     mainWindow.webContents.send('store-data', results[0]);
+  //   })
+  // })
 };
 
-const db = new sqlite3.Database(path.resolve(__dirname, 'Data.gmdb'));
-console.log(db)
+function getFileWithExtensionName(dir, ext) {
+  var files = fs.readdirSync(dir);
+  for (var i = 0; i < files.length; i++) {
+    if (path.extname(files[i]) === '.' + ext)
+      return path.join(dir,files[i])
+  }
+}
+
+
+
 
 const registerMapProtocal = () => {
 
@@ -75,6 +95,8 @@ const registerMapProtocal = () => {
 app.on('ready', () => {
   registerMapProtocal();
   createWindow();
+  
+  
 });
 
 
