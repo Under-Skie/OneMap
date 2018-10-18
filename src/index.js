@@ -4,7 +4,7 @@ const url = require("url");
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 
-const dbPath = getFileWithExtensionName(path.resolve(__dirname, '..','data'), 'sqlite')
+const dbPath = getFileWithExtensionName(path.join(app.getAppPath(), 'data'), 'sqlite')
 const db = new sqlite3.Database(dbPath);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -27,7 +27,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   if (process.env['NODE_ENV'] == 'development')
-  mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -48,12 +48,9 @@ function getFileWithExtensionName(dir, ext) {
   var files = fs.readdirSync(dir);
   for (var i = 0; i < files.length; i++) {
     if (path.extname(files[i]) === '.' + ext)
-      return path.join(dir,files[i])
+      return path.join(dir, files[i])
   }
 }
-
-
-
 
 const registerMapProtocal = () => {
 
@@ -95,8 +92,6 @@ const registerMapProtocal = () => {
 app.on('ready', () => {
   registerMapProtocal();
   createWindow();
-  
-  
 });
 
 

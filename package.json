@@ -20,6 +20,10 @@
   "license": "MIT",
   "config": {
     "forge": {
+      "packagerConfig":{
+        "extraResource":["data"],
+        "resources":["data"]
+      },
       "make_targets": {
         "win32": [
           "squirrel"

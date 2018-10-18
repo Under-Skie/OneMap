@@ -2,7 +2,7 @@ global.L = require('leaflet');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
-
+const { app } = require('electron').remote
 // const ipcRenderer = require('electron').ipcRenderer;
 
 const url_satelite = 'map://47626774/{z}/{x}/{y}';
@@ -18,7 +18,7 @@ function getFileWithExtensionName(dir, ext) {
     }
 }
 
-const dbPath = getFileWithExtensionName(path.resolve(__dirname, '..', 'data'), 'sqlite')
+const dbPath = getFileWithExtensionName(path.join(app.getAppPath(), 'data'), 'sqlite')
 const db = new sqlite3.Database(dbPath);
 
 db.all('select * from Meta', function (error, results, fields) {
